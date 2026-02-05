@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { ThirdPartyServiceError } from '../../common/exceptions/external-service.exception';
 
 @Injectable()
 export class PreferencesAnalystService {
@@ -45,11 +46,11 @@ export class PreferencesAnalystService {
       ]
     `;
 
-    const result = await this.model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
-
     try {
+      const result = await this.model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
+
       const cleanedText = text
         .replace(/```json/g, '')
         .replace(/```/g, '')
@@ -62,11 +63,10 @@ export class PreferencesAnalystService {
       }
     } catch (error) {
       console.error('Error parseando JSON de Gemini:', error);
-      return roads.map((r) => ({
-        value: 0,
-        label: r,
-        description: 'Error en análisis',
-      }));
+      throw new ThirdPartyServiceError(
+        'GeminiAI',
+        'No se pudo generar el análisis o se excedió la cuota',
+      );
     }
   }
 }
