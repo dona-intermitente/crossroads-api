@@ -8,6 +8,8 @@ import { AllExceptionsFilter } from './common/filters/http-exception.filter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors();
+
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new AllExceptionsFilter());
 
@@ -27,6 +29,10 @@ async function bootstrap() {
     } as any),
   );
 
-  await app.listen(process.env.PORT ?? 3000);
+  app.getHttpAdapter().get('/api-json', (_, res) => {
+    res.json(document);
+  });
+
+  await app.listen(process.env.PORT ?? 4000);
 }
-bootstrap();
+void bootstrap();

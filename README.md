@@ -48,7 +48,7 @@ Crea un archivo `.env` en la raíz del proyecto y añade tu API Key de Gemini:
 
 ```env
 GEMINI_API_KEY=tu_clave_de_google_ai_studio
-PORT=3000
+PORT=4000
 ```
 
 ### 4. Ejecutar la aplicación

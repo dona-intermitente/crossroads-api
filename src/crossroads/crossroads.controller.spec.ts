@@ -8,7 +8,14 @@ describe('CrossroadsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [CrossroadsController],
-      providers: [CrossroadsService],
+      providers: [
+        {
+          provide: CrossroadsService,
+          useValue: {
+            create: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
     controller = module.get<CrossroadsController>(CrossroadsController);
